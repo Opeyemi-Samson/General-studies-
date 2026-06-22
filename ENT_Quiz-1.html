@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENT — Entrepreneurship Quiz</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #FAFAF7;
+  --surface: #FFFFFF;
+  --surface2: #F3F2EE;
+  --border: #E4E2DC;
+  --accent: #1A6B3C;
+  --accent-light: #22883F;
+  --accent-bg: #EBF5EF;
+  --ink: #1A1A18;
+  --muted: #7A7A72;
+  --red: #C0392B;
+  --red-bg: #FDECEA;
+  --gold: #C8860A;
+  --gold-bg: #FEF6E4;
+  --radius: 12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Manrope', sans-serif;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--ink);
+  padding: 0 32px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+.logo-dot { color: #4ADE80; }
+.header-tag {
+  font-size: 0.7rem;
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.6);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── LANDING ── */
+#screen-landing {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 64px 24px 80px;
+}
+.landing-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 1px solid #C3E0CE;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 28px;
+}
+.landing-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 5.5vw, 3.2rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+  color: var(--ink);
+}
+.landing-title span { color: var(--accent); }
+.landing-sub {
+  font-size: 0.97rem;
+  line-height: 1.75;
+  color: var(--muted);
+  margin-bottom: 44px;
+  max-width: 500px;
+}
+
+.topic-blocks {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 44px;
+}
+.topic-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.topic-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+.topic-name { font-size: 0.8rem; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.topic-count { font-size: 0.7rem; color: var(--muted); }
+
+.mode-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.mode-pill {
+  flex: 1;
+  min-width: 140px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  text-align: left;
+}
+.mode-pill:hover { border-color: #B0D0BB; }
+.mode-pill.selected { border-color: var(--accent); background: var(--accent-bg); }
+.mode-pill .mp-icon { font-size: 1.3rem; margin-bottom: 8px; }
+.mode-pill .mp-name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.88rem; color: var(--ink); margin-bottom: 3px; }
+.mode-pill .mp-desc { font-size: 0.7rem; color: var(--muted); line-height: 1.5; }
+
+.btn-start {
+  width: 100%;
+  background: var(--ink);
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 16px;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+  letter-spacing: -0.01em;
+}
+.btn-start:hover { background: #2d2d28; transform: translateY(-1px); }
+
+/* ── QUIZ ── */
+#screen-quiz {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+.quiz-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.q-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.q-label strong { color: var(--ink); }
+.timer-chip {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  background: var(--gold-bg);
+  color: var(--gold);
+  border: 1px solid #F0D090;
+  padding: 4px 14px;
+  border-radius: 20px;
+  display: none;
+}
+.timer-chip.danger { background: var(--red-bg); color: var(--red); border-color: #F5C0BB; }
+.score-chip {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border: 1px solid #C3E0CE;
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+
+.progress-track {
+  height: 5px;
+  background: var(--border);
+  border-radius: 99px;
+  margin-bottom: 28px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 99px;
+  transition: width .35s ease;
+}
+
+.q-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 14px;
+}
+.q-topic-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-bg);
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+.q-text {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.65;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+
+.options { display: flex; flex-direction: column; gap: 9px; }
+.opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 16px;
+  cursor: pointer;
+  transition: border-color .12s, background .12s;
+  text-align: left;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.5;
+  width: 100%;
+}
+.opt:hover:not(:disabled) { border-color: #B0D0BB; background: #F7FBF8; }
+.opt-key {
+  min-width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.72rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.opt.correct { border-color: var(--accent-light); background: var(--accent-bg); }
+.opt.correct .opt-key { background: var(--accent); border-color: var(--accent); color: #fff; }
+.opt.wrong { border-color: var(--red); background: var(--red-bg); }
+.opt.wrong .opt-key { background: var(--red); border-color: var(--red); color: #fff; }
+.opt:disabled { cursor: default; }
+
+.feedback {
+  border-radius: 10px;
+  padding: 13px 16px;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  display: none;
+  margin-top: 12px;
+  font-weight: 500;
+}
+.feedback.correct { background: var(--accent-bg); border: 1px solid #C3E0CE; color: #1A5C34; display: block; }
+.feedback.wrong { background: var(--red-bg); border: 1px solid #F5C0BB; color: #922B21; display: block; }
+
+.quiz-nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+.btn-nav {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 10px 22px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: .12s;
+}
+.btn-nav.ghost { background: var(--surface); border: 1.5px solid var(--border); color: var(--ink); }
+.btn-nav.ghost:hover { border-color: #B0D0BB; }
+.btn-nav.solid { background: var(--ink); border: 1.5px solid var(--ink); color: #fff; }
+.btn-nav.solid:hover { background: #2d2d28; }
+
+/* ── RESULTS ── */
+#screen-results {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 52px 24px 80px;
+  text-align: center;
+}
+.res-pct {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: clamp(4rem, 14vw, 7rem);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.grade-A { color: var(--accent); }
+.grade-B { color: #1A6B8C; }
+.grade-C { color: var(--gold); }
+.grade-D, .grade-F { color: var(--red); }
+.res-fraction { font-size: 0.95rem; color: var(--muted); margin-bottom: 8px; }
+.res-verdict {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--ink);
+  margin-bottom: 36px;
+}
+
+.stat-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 36px;
+}
+.stat {
+  flex: 1;
+  min-width: 100px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 12px;
+}
+.stat-n {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+  margin-bottom: 3px;
+}
+.stat-n.g { color: var(--accent); }
+.stat-n.r { color: var(--red); }
+.stat-n.m { color: var(--gold); }
+.stat-lbl { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; }
+
+.review-btn {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  color: var(--ink);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 11px 24px;
+  border-radius: 9px;
+  cursor: pointer;
+  margin-bottom: 24px;
+  transition: border-color .12s;
+}
+.review-btn:hover { border-color: #B0D0BB; }
+
+.review-list { display: none; text-align: left; }
+.review-list.open { display: block; }
+.ri {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.ri.ok { border-left: 3px solid var(--accent-light); }
+.ri.bad { border-left: 3px solid var(--red); }
+.ri-q { font-weight: 700; color: var(--ink); margin-bottom: 7px; }
+.ri-yours { color: var(--red); margin-bottom: 2px; }
+.ri-ans { color: var(--accent); margin-bottom: 4px; }
+.ri-expl { color: var(--muted); font-size: 0.78rem; }
+
+.res-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+.btn-action {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 12px 28px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: .12s;
+}
+.btn-action.dark { background: var(--ink); color: #fff; border: none; }
+.btn-action.dark:hover { background: #2d2d28; }
+.btn-action.light { background: var(--surface); color: var(--ink); border: 1.5px solid var(--border); }
+.btn-action.light:hover { border-color: #B0D0BB; }
+
+@media (max-width: 520px) {
+  .topic-blocks { grid-template-columns: 1fr; }
+  header { padding: 0 16px; }
+  #screen-landing, #screen-quiz, #screen-results { padding-left: 16px; padding-right: 16px; }
+  .q-card { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">ENT<span class="logo-dot">.</span>Quiz</div>
+  <div class="header-tag">OOU · Entrepreneurship</div>
+</header>
+
+<!-- LANDING -->
+<div id="screen-landing" class="screen active">
+  <div class="landing-eyebrow">📋 Exam Prep · 40 Questions</div>
+  <h1 class="landing-title">Ready to test your<br><span>ENT knowledge?</span></h1>
+  <p class="landing-sub">All questions drawn directly from your lecture recordings — brainstorming, venture creation, e-business, technology, and startup ecosystems.</p>
+
+  <div class="topic-blocks">
+    <div class="topic-block"><div class="topic-icon">💡</div><div><div class="topic-name">Business Ideas & Brainstorming</div><div class="topic-count">Venture creation, idea pitching, personal contact</div></div></div>
+    <div class="topic-block"><div class="topic-icon">🚀</div><div><div class="topic-name">Startups & Entrepreneurship</div><div class="topic-count">Corporate venturing, startup outcomes, innovation</div></div></div>
+    <div class="topic-block"><div class="topic-icon">💻</div><div><div class="topic-name">Technology in Business</div><div class="topic-count">Information age, tech branches, tech capability</div></div></div>
+    <div class="topic-block"><div class="topic-icon">🌐</div><div><div class="topic-name">E-Business & Internet</div><div class="topic-count">E-commerce, e-marketing, intranet, supply chain</div></div></div>
+  </div>
+
+  <div class="mode-row">
+    <div class="mode-pill selected" data-mode="practice" onclick="pickMode(this)">
+      <div class="mp-icon">📚</div>
+      <div class="mp-name">Practice Mode</div>
+      <div class="mp-desc">See explanations after each answer. No time pressure.</div>
+    </div>
+    <div class="mode-pill" data-mode="timed" onclick="pickMode(this)">
+      <div class="mp-icon">⏱️</div>
+      <div class="mp-name">Timed Exam</div>
+      <div class="mp-desc">40 questions in 40 minutes. Real exam feel.</div>
+    </div>
+    <div class="mode-pill" data-mode="quick" onclick="pickMode(this)">
+      <div class="mp-icon">⚡</div>
+      <div class="mp-name">Quick 15</div>
+      <div class="mp-desc">Random 15 questions for a fast revision burst.</div>
+    </div>
+  </div>
+
+  <button class="btn-start" onclick="startQuiz()">Start Quiz →</button>
+</div>
+
+<!-- QUIZ -->
+<div id="screen-quiz" class="screen">
+  <div class="quiz-topbar">
+    <div class="q-label">Question <strong id="q-num">1</strong> of <strong id="q-total">40</strong></div>
+    <div class="timer-chip" id="timer-chip">40:00</div>
+    <div class="score-chip" id="score-chip">0 / 0</div>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+
+  <div class="q-card">
+    <div class="q-topic-tag" id="q-topic"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <div class="quiz-nav">
+    <button class="btn-nav ghost" id="btn-prev" onclick="prevQ()" style="display:none">← Back</button>
+    <button class="btn-nav solid" id="btn-next" onclick="nextQ()" style="display:none">Next →</button>
+    <button class="btn-nav solid" id="btn-finish" onclick="finishQuiz()" style="display:none">Finish Quiz</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="screen-results" class="screen">
+  <div class="res-pct" id="res-pct"></div>
+  <div class="res-fraction" id="res-frac"></div>
+  <div class="res-verdict" id="res-verdict"></div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-n g" id="st-correct">0</div><div class="stat-lbl">Correct</div></div>
+    <div class="stat"><div class="stat-n r" id="st-wrong">0</div><div class="stat-lbl">Wrong</div></div>
+    <div class="stat"><div class="stat-n m" id="st-skip">0</div><div class="stat-lbl">Skipped</div></div>
+    <div class="stat"><div class="stat-n m" id="st-time">—</div><div class="stat-lbl">Time</div></div>
+  </div>
+  <button class="review-btn" onclick="toggleReview()">📋 Review All Answers</button>
+  <div class="review-list" id="review-list"></div>
+  <div class="res-actions">
+    <button class="btn-action dark" onclick="restartSame()">Try Again</button>
+    <button class="btn-action light" onclick="goHome()">← Home</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  // ── BATCH 1: Session 4 (high-impact entrepreneurs, technology, e-business) ──
+  {
+    topic: "Entrepreneurship",
+    q: "What did the lecturer say has become indispensable in performing most business processes?",
+    opts: ["Computer software and the internet", "Traditional ledgers and written memos", "Manual stock counting and retail brokers", "Telephone booths and fixed mail systems"],
+    ans: 0,
+    expl: "The lecturer stated that computer software and the internet have become indispensable tools in performing most modern business processes."
+  },
+  {
+    topic: "Entrepreneurship",
+    q: "How did the lecturer describe high-impact entrepreneurs?",
+    opts: ["Those who manage only mature corporations", "Those who start new firms often with new ideas or improved strategies", "Those who avoid risk and innovation", "Those who only inherit family businesses"],
+    ans: 1,
+    expl: "High-impact entrepreneurs were described as those who start new firms, often bringing new ideas or improved strategies to the market."
+  },
+  {
+    topic: "Technology in Business",
+    q: "How did the lecture describe the effect of technology on geographic limits of business?",
+    opts: ["It restores dependence on a fixed place", "It reduces the importance of fixed geographical location", "It makes only urban business viable", "It restricts firms to national markets"],
+    ans: 1,
+    expl: "Technology reduces the importance of fixed geographical location, allowing businesses to operate globally without being tied to a specific place."
+  },
+  {
+    topic: "Technology in Business",
+    q: "Which of the following was listed among the branches of technology in the lecture?",
+    opts: ["Health and safety", "Public finance and taxation", "Banking and insurance", "Politics and legislation"],
+    ans: 2,
+    expl: "Banking and insurance were explicitly listed among the branches of technology covered in the lecture."
+  },
+  {
+    topic: "E-Business",
+    q: "Which statement best defines e-commerce from the lecture?",
+    opts: ["A paper-based sales agreement across regions", "A technology-based performance of market transactions including deals and payments", "A warehouse management model without online payment", "A tax reporting system for wholesalers only"],
+    ans: 1,
+    expl: "E-commerce was defined as a technology-based means of performing market transactions, including deals and payments, over the internet."
+  },
+  {
+    topic: "E-Business",
+    q: "What purpose of real-time connection in electronic business was stressed in the lecture?",
+    opts: ["Optimizing the flow of raw materials, components and finished products through the supply chain", "Eliminating all intermediaries permanently", "Restricting contact to local suppliers", "Replacing logistics with inventory hoarding"],
+    ans: 0,
+    expl: "The key purpose of real-time connection highlighted was optimising the flow of raw materials, components, and finished products through the supply chain."
+  },
+  {
+    topic: "E-Business",
+    q: "According to the lecture, electronic business allows a firm to connect with which range of actors?",
+    opts: ["Only end users and final buyers", "Suppliers, logistics providers, wholesalers, distributors and end users", "Only investors and lenders", "Only governments and regulators"],
+    ans: 1,
+    expl: "E-business enables a firm to connect with all actors across the supply chain — from suppliers and logistics providers to wholesalers, distributors, and end users."
+  },
+  {
+    topic: "E-Business",
+    q: "What did the lecturer say intranet technologies allow within organisations?",
+    opts: ["Only external trade negotiations", "Internal communication and internal operational support", "Only marketing to final consumers", "Only payroll secrecy"],
+    ans: 1,
+    expl: "Intranet technologies were described as enabling internal communication and operational support within an organisation."
+  },
+  {
+    topic: "E-Business",
+    q: "How was e-marketing described in relation to e-commerce?",
+    opts: ["A separate activity unrelated to online selling", "A component of e-commerce using the internet to advertise and sell goods and services", "A process limited to government information", "A method of replacing customer service with automation"],
+    ans: 1,
+    expl: "E-marketing is a component of e-commerce, using the internet specifically for advertising and selling goods and services."
+  },
+  {
+    topic: "Technology in Business",
+    q: "What major debate did the lecturer mention about technology and new business development?",
+    opts: ["Whether technology is the only form of capital", "Whether technology is the driving force or only a facilitator or enabler", "Whether technology belongs only to large firms", "Whether technology should replace strategy entirely"],
+    ans: 1,
+    expl: "The lecturer raised the debate about whether technology is the primary driving force of business development or merely a facilitator and enabler."
+  },
+
+  // ── BATCH 2: Startup outcomes, e-business, corporate venturing, tech ──
+  {
+    topic: "Startups",
+    q: "How did the lecturer distribute startup outcomes across firms?",
+    opts: ["One third profit, one third break even, one third failure", "One quarter profit, one half break even, one quarter failure", "One half profit, one quarter break even, one quarter failure", "One third profit, one half break even, one sixth failure"],
+    ans: 0,
+    expl: "The lecturer stated the classic startup outcome distribution: one-third are profitable, one-third break even, and one-third fail."
+  },
+  {
+    topic: "Startups",
+    q: "According to the lecture, a new venture formed within an existing organisation is best described as what?",
+    opts: ["Corporate venturing", "Independent venturing", "Incremental venturing", "Personal venturing"],
+    ans: 0,
+    expl: "A venture created inside an existing organisation is called corporate venturing — it leverages the parent company's resources while developing something new."
+  },
+  {
+    topic: "Technology in Business",
+    q: "Which two broad forms of technological development were identified in the lecture?",
+    opts: ["Reduced manual labour and enhanced services", "Reduced taxation and enhanced exports", "Reduced ownership and enhanced outsourcing", "Reduced risk and enhanced demand"],
+    ans: 0,
+    expl: "The two broad forms of technological development identified were: reduced manual labour (automation) and enhanced services (better quality delivery)."
+  },
+  {
+    topic: "Technology in Business",
+    q: "Which set of technologies was said to create new business opportunities?",
+    opts: ["Internet, mobile phones, consumer products and information services", "Roads, seaports, cooperatives and unions", "Warehouses, markets and town halls", "Licenses, taxes and import quotas"],
+    ans: 0,
+    expl: "Internet, mobile phones, consumer products, and information services were identified as the technologies creating new business opportunities."
+  },
+  {
+    topic: "Technology in Business",
+    q: "What did the lecturer call the present age in which information drives business success?",
+    opts: ["The industrial age", "The information age", "The mechanical age", "The extraction age"],
+    ans: 1,
+    expl: "The lecturer referred to the current era as the Information Age — a period in which data and knowledge are the primary drivers of business success."
+  },
+  {
+    topic: "Startups",
+    q: "According to the lecture, large mature firms assist new ventures mainly by doing which combination of actions?",
+    opts: ["Licensing only and regulating only", "Becoming customers, outsourcing, buying from them and providing human capital", "Imposing taxes and limiting entry", "Replacing founders and dissolving weak startups"],
+    ans: 1,
+    expl: "Large firms support startups by becoming customers, outsourcing work to them, buying their products, and supplying experienced human capital."
+  },
+  {
+    topic: "Technology in Business",
+    q: "Which statement best matches the lecturer's emphasis on technological capability?",
+    opts: ["Technology works on its own once purchased", "People and managerial competence determine whether technology is effectively used", "Technology eliminates the need for skilled personnel", "Technology matters more than all other factors combined"],
+    ans: 1,
+    expl: "The lecturer stressed that technology alone is insufficient — people and managerial competence are what determine whether technology is effectively leveraged."
+  },
+
+  // ── BATCH 3: Brainstorming, venture creation, innovation ──
+  {
+    topic: "Brainstorming",
+    q: "The lecturer described brainstorming as a powerful tool used by businesses to foster creativity, innovation and what else?",
+    opts: ["Retirement planning", "Problem solving", "Import substitution", "Price fixing"],
+    ans: 1,
+    expl: "Brainstorming was described as a tool that fosters creativity, innovation, and problem solving — all central to entrepreneurship."
+  },
+  {
+    topic: "Entrepreneurship",
+    q: "The lecturer linked venture creation most directly with what broader concepts?",
+    opts: ["Politics and law", "Innovation and creativity", "Religion and ethics", "Culture and language"],
+    ans: 1,
+    expl: "Venture creation was linked directly to innovation and creativity — the idea that new businesses emerge from new or improved ideas."
+  },
+  {
+    topic: "Business Ideas",
+    q: "Technical skill was described as a source of business ideas especially when someone goes to learn what?",
+    opts: ["A language course only", "A skill such as electrical or related technical training", "A political ideology", "A religious doctrine"],
+    ans: 1,
+    expl: "Technical skills — such as learning electrical work or other vocational training — were cited as important sources of business ideas."
+  },
+  {
+    topic: "Brainstorming",
+    q: "One usefulness of brainstorming listed in the lecture was that it encourages people to think how?",
+    opts: ["Emotionally", "Critically", "Privately", "Silently"],
+    ans: 1,
+    expl: "Brainstorming encourages critical thinking — pushing participants to examine ideas from multiple angles rather than accepting the first answer."
+  },
+  {
+    topic: "Business Ideas",
+    q: "According to the lecture, business has gone beyond only buying and selling because what is now the key important aspect?",
+    opts: ["Tax payment", "Customer satisfaction", "Public ownership", "Government regulation"],
+    ans: 1,
+    expl: "Modern business goes beyond buying and selling — customer satisfaction is now the key focus and differentiator for businesses."
+  },
+  {
+    topic: "Brainstorming",
+    q: "Which of the following was listed as part of implementing brainstorming in a business setting?",
+    opts: ["Set clear goals", "Avoid digital tools", "Limit participation to one person", "Hide information from the team"],
+    ans: 0,
+    expl: "Setting clear goals is a key step in implementing an effective brainstorming session — it gives the group direction and focus."
+  },
+  {
+    topic: "Business Ideas",
+    q: "In the lecturer's explanation, what makes an existing business idea look new to customers?",
+    opts: ["Tax exemption", "Innovation and creativity", "Government subsidy", "Family ownership"],
+    ans: 1,
+    expl: "Innovation and creativity are what make an existing idea appear fresh and new to customers — the sachet water from ice water example illustrates this."
+  },
+  {
+    topic: "Business Ideas",
+    q: "According to the lecture, a business idea becomes meaningful when a business-oriented person can do what with it?",
+    opts: ["Reject it quickly", "Bring out value from it", "Keep it private forever", "Turn it into tax policy"],
+    ans: 1,
+    expl: "An idea becomes a meaningful business idea when an entrepreneur can bring out real value from it — turning thought into viable commercial action."
+  },
+  {
+    topic: "Business Ideas",
+    q: "Which of the following was explicitly listed among the sources of business ideas?",
+    opts: ["Observation of development and changes around you", "Only formal university courses", "Only import-export statistics", "Only stock market trends"],
+    ans: 0,
+    expl: "Observation of developments and changes in your environment was listed as a key source of business ideas — staying alert to problems that need solving."
+  },
+  {
+    topic: "Business Ideas",
+    q: "The lecturer repeatedly described business as essentially what?",
+    opts: ["A legal privilege", "A form of taxation", "Problem solving", "A social ceremony"],
+    ans: 2,
+    expl: "Business was repeatedly described as problem solving — businesses exist to identify and solve problems people face, which is the foundation of entrepreneurship."
+  },
+
+  // ── BATCH 4: Core definitions from the original question bank ──
+  {
+    topic: "Brainstorming",
+    q: "What was named as the topic for the lecture?",
+    opts: ["Business ethics and taxation", "Business idea context, brainstorming sessions, idea pitching", "Financial planning and budgeting", "Production and distribution management"],
+    ans: 1,
+    expl: "The lecture topic was 'Business idea context, brainstorming sessions, idea pitching' — covering how ideas are generated, developed, and presented."
+  },
+  {
+    topic: "Brainstorming",
+    q: "According to the lecture, brainstorming can help employees do what together?",
+    opts: ["Compete disrespectfully", "Work together respectfully and responsibly", "Avoid participation", "Ignore team goals"],
+    ans: 1,
+    expl: "Brainstorming enables employees to work together respectfully and responsibly — it promotes collaboration rather than competition."
+  },
+  {
+    topic: "Business Ideas",
+    q: "Personal contact was explained as obtaining ideas through what?",
+    opts: ["Court proceedings", "One on one or group discussion", "Only online surveys", "Formal taxation"],
+    ans: 1,
+    expl: "Personal contact as a source of business ideas means gathering insights through one-on-one conversations or group discussions with others."
+  },
+  {
+    topic: "Brainstorming",
+    q: "The phrase 'two words are definitely better than one' was used by the lecturer to emphasise what?",
+    opts: ["Legal drafting", "The value of shared thinking in brainstorming", "The importance of slogans", "The danger of criticism"],
+    ans: 1,
+    expl: "The phrase highlighted that shared thinking produces better outcomes — collaboration and collective input outperform individual thinking."
+  },
+  {
+    topic: "Business Ideas",
+    q: "The lecturer used the shift from ice water to sachet water and then to table water mainly to explain what?",
+    opts: ["Government regulation", "Innovation built on earlier products", "Transport cost", "Seasonal demand only"],
+    ans: 1,
+    expl: "The ice water → sachet water → table water progression illustrates how innovation builds incrementally on existing products to create new business opportunities."
+  },
+  {
+    topic: "Entrepreneurship",
+    q: "What advice did the lecturer give about choosing the kind of business to start?",
+    opts: ["Start any business for business sake", "Start only what family members suggest", "Start something you are happy with and connected to", "Start the most expensive one available"],
+    ans: 2,
+    expl: "The lecturer advised starting a business you are genuinely happy with and personally connected to — passion and connection improve commitment and success."
+  },
+  {
+    topic: "Entrepreneurship",
+    q: "What did the lecturer say venture creation has to do with in its simplest sense?",
+    opts: ["Closing an old business", "Establishing a new business", "Borrowing from banks", "Studying market law"],
+    ans: 1,
+    expl: "In its simplest sense, venture creation means establishing a new business — bringing a new enterprise into existence."
+  },
+  {
+    topic: "Brainstorming",
+    q: "What was brainstorming defined as in the lecture?",
+    opts: ["Working silently alone on a new product", "Two or more people with similar mindset discussing a matter to create value and solve problems", "A method of recording sales", "A way of avoiding other people's opinions"],
+    ans: 1,
+    expl: "Brainstorming was defined as two or more people with a similar mindset coming together to discuss a matter with the aim of creating value and solving problems."
+  },
+  {
+    topic: "Business Ideas",
+    q: "A business idea was defined as what kind of thing?",
+    opts: ["A fixed legal document", "Any thought an entrepreneur may develop into a business to solve a problem", "A bank account opened for trade", "A list of customers in a market"],
+    ans: 1,
+    expl: "A business idea is any thought that an entrepreneur can develop into a business to solve a problem — it starts as a concept but must be actionable."
+  },
+  {
+    topic: "Business Ideas",
+    q: "The lecturer said an idea may first appear in conversation as what?",
+    opts: ["A verdict", "A thought or opinion", "A contract clause", "A punishment"],
+    ans: 1,
+    expl: "An idea in conversation is simply a thought or opinion — it hasn't yet been formalised but contains the seed of a potential business opportunity."
+  },
+  {
+    topic: "E-Business",
+    q: "What is the role of HR via the internet according to the lecture?",
+    opts: ["Online recruitment", "Machine repair", "Voting", "Mineral extraction"],
+    ans: 0,
+    expl: "The internet is used in HR primarily for online recruitment — sourcing, screening, and hiring employees through digital platforms."
+  },
+  {
+    topic: "Technology in Business",
+    q: "Why did the lecturer say technology alone is insufficient for business success?",
+    opts: ["Because it is illegal to rely on technology", "Because it needs the right strategy and enabling environment", "Because technology is not useful in manufacturing", "Because technology only works in large firms"],
+    ans: 1,
+    expl: "Technology alone is insufficient because it requires the right strategy, people, and enabling environment to translate into actual business results."
+  }
+];
+
+// ── STATE ──
+let mode = 'practice';
+let questions = [];
+let current = 0;
+let answers = {};
+let score = 0;
+let timerSecs = 0;
+let timerInterval = null;
+let startTime = null;
+let endTime = null;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function pickMode(el) {
+  document.querySelectorAll('.mode-pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  mode = el.dataset.mode;
+}
+
+function fmt(s) {
+  return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+}
+
+function startQuiz() {
+  let pool = shuffle(QUESTIONS);
+  if (mode === 'quick') pool = pool.slice(0, 15);
+  questions = pool;
+  current = 0; answers = {}; score = 0;
+  startTime = Date.now();
+
+  const chip = document.getElementById('timer-chip');
+  if (mode === 'timed') {
+    timerSecs = questions.length * 60;
+    chip.style.display = 'block';
+    chip.textContent = fmt(timerSecs);
+    chip.className = 'timer-chip';
+    timerInterval = setInterval(() => {
+      timerSecs--;
+      chip.textContent = fmt(timerSecs);
+      if (timerSecs <= 120) chip.className = 'timer-chip danger';
+      if (timerSecs <= 0) finishQuiz();
+    }, 1000);
+  } else {
+    chip.style.display = 'none';
+    clearInterval(timerInterval);
+  }
+
+  showScreen('screen-quiz');
+  renderQ();
+}
+
+function renderQ() {
+  const q = questions[current];
+  const total = questions.length;
+
+  document.getElementById('q-num').textContent = current + 1;
+  document.getElementById('q-total').textContent = total;
+  document.getElementById('q-topic').textContent = q.topic;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('prog').style.width = `${(current / total) * 100}%`;
+  document.getElementById('score-chip').textContent = `${score} / ${current}`;
+
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback';
+  fb.textContent = '';
+
+  const optEl = document.getElementById('options');
+  optEl.innerHTML = '';
+  ['A','B','C','D'].forEach((k, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="opt-key">${k}</span><span>${q.opts[i]}</span>`;
+    btn.onclick = () => pick(i);
+    optEl.appendChild(btn);
+  });
+
+  document.getElementById('btn-prev').style.display = (current > 0 && mode === 'practice') ? 'block' : 'none';
+  document.getElementById('btn-next').style.display = 'none';
+  document.getElementById('btn-finish').style.display = 'none';
+
+  if (answers[current] !== undefined) restoreQ();
+}
+
+function restoreQ() {
+  const q = questions[current];
+  const chosen = answers[current];
+  const btns = document.querySelectorAll('.opt');
+  btns.forEach(b => b.disabled = true);
+  btns[chosen].classList.add(chosen === q.ans ? 'correct' : 'wrong');
+  if (chosen !== q.ans) btns[q.ans].classList.add('correct');
+  if (mode === 'practice') showFeedback(chosen === q.ans, q);
+  showNav();
+}
+
+function pick(i) {
+  if (answers[current] !== undefined) return;
+  const q = questions[current];
+  answers[current] = i;
+  const btns = document.querySelectorAll('.opt');
+  btns.forEach(b => b.disabled = true);
+  btns[i].classList.add(i === q.ans ? 'correct' : 'wrong');
+  if (i !== q.ans) btns[q.ans].classList.add('correct');
+  if (i === q.ans) score++;
+  document.getElementById('score-chip').textContent = `${score} / ${current + 1}`;
+  if (mode === 'practice') showFeedback(i === q.ans, q);
+  showNav();
+}
+
+function showFeedback(correct, q) {
+  const fb = document.getElementById('feedback');
+  fb.className = `feedback ${correct ? 'correct' : 'wrong'}`;
+  fb.textContent = correct
+    ? `✓ Correct! ${q.expl}`
+    : `✗ Wrong. The correct answer is ${['A','B','C','D'][q.ans]}. ${q.expl}`;
+}
+
+function showNav() {
+  const isLast = current === questions.length - 1;
+  document.getElementById('btn-next').style.display = isLast ? 'none' : 'block';
+  document.getElementById('btn-finish').style.display = isLast ? 'block' : 'none';
+}
+
+function nextQ() { if (current < questions.length - 1) { current++; renderQ(); } }
+function prevQ() { if (current > 0) { current--; renderQ(); } }
+
+function finishQuiz() {
+  clearInterval(timerInterval);
+  endTime = Date.now();
+  const total = questions.length;
+  const pct = Math.round((score / total) * 100);
+  const wrong = Object.keys(answers).filter(i => answers[i] !== questions[i].ans).length;
+  const skipped = total - Object.keys(answers).length;
+  const elapsed = Math.floor((endTime - startTime) / 1000);
+
+  let grade, cls, verdict;
+  if (pct >= 70) { grade = `${pct}%`; cls = 'grade-A'; verdict = '🏆 Excellent — you know your ENT!'; }
+  else if (pct >= 60) { grade = `${pct}%`; cls = 'grade-B'; verdict = '👍 Good — a little more revision and you\'re set.'; }
+  else if (pct >= 50) { grade = `${pct}%`; cls = 'grade-C'; verdict = '📚 Fair — review the topics you missed below.'; }
+  else if (pct >= 40) { grade = `${pct}%`; cls = 'grade-D'; verdict = '⚠️ Below average — go back over your notes.'; }
+  else { grade = `${pct}%`; cls = 'grade-F'; verdict = '🔁 Time for a full revision session!'; }
+
+  document.getElementById('res-pct').textContent = grade;
+  document.getElementById('res-pct').className = `res-pct ${cls}`;
+  document.getElementById('res-frac').textContent = `${score} correct out of ${total} questions`;
+  document.getElementById('res-verdict').textContent = verdict;
+  document.getElementById('st-correct').textContent = score;
+  document.getElementById('st-wrong').textContent = wrong;
+  document.getElementById('st-skip').textContent = skipped;
+  document.getElementById('st-time').textContent = fmt(elapsed);
+
+  const rl = document.getElementById('review-list');
+  rl.innerHTML = '';
+  rl.classList.remove('open');
+  questions.forEach((q, i) => {
+    const ua = answers[i];
+    const ok = ua === q.ans;
+    const keys = ['A','B','C','D'];
+    const div = document.createElement('div');
+    div.className = `ri ${ok ? 'ok' : 'bad'}`;
+    div.innerHTML = `
+      <div class="ri-q">Q${i+1}: ${q.q}</div>
+      ${ua !== undefined
+        ? `<div class="ri-yours">${ok ? '✓' : '✗'} Your answer: ${keys[ua]}. ${q.opts[ua]}</div>`
+        : `<div class="ri-yours">— Skipped</div>`}
+      ${!ok ? `<div class="ri-ans">✓ Correct: ${keys[q.ans]}. ${q.opts[q.ans]}</div>` : ''}
+      <div class="ri-expl">${q.expl}</div>
+    `;
+    rl.appendChild(div);
+  });
+
+  showScreen('screen-results');
+}
+
+function toggleReview() {
+  const rl = document.getElementById('review-list');
+  rl.classList.toggle('open');
+  document.querySelector('.review-btn').textContent = rl.classList.contains('open') ? '🔼 Hide Review' : '📋 Review All Answers';
+}
+
+function restartSame() { clearInterval(timerInterval); startQuiz(); }
+function goHome() { clearInterval(timerInterval); showScreen('screen-landing'); }
+</script>
+</body>
+</html>

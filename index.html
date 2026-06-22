@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sammy's Exam Prep Hub</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #0E0E0C;
+  --surface: #161613;
+  --border: #252520;
+  --text: #F0EFE8;
+  --muted: #7A7A6E;
+  --green: #2EA043;
+  --green-bg: rgba(46,160,67,0.1);
+  --green-border: rgba(46,160,67,0.25);
+  --gold: #C8860A;
+  --gold-bg: rgba(200,134,10,0.1);
+  --gold-border: rgba(200,134,10,0.25);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Manrope', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.hub {
+  width: 100%;
+  max-width: 560px;
+}
+
+.hub-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.hub-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.9rem, 6vw, 2.8rem);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.hub-sub {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin-bottom: 48px;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color .18s, transform .15s, background .18s;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .2s;
+  pointer-events: none;
+}
+.card.green::before { background: var(--green-bg); }
+.card.gold::before  { background: var(--gold-bg); }
+.card:hover { transform: translateY(-3px); }
+.card.green:hover { border-color: var(--green); }
+.card.gold:hover  { border-color: var(--gold); }
+.card:hover::before { opacity: 1; }
+
+.card-icon {
+  font-size: 2rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.card.green .card-icon { background: var(--green-bg); border: 1px solid var(--green-border); }
+.card.gold  .card-icon { background: var(--gold-bg);  border: 1px solid var(--gold-border); }
+
+.card-body { flex: 1; min-width: 0; }
+.card-course {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.card.green .card-course { color: var(--green); }
+.card.gold  .card-course { color: var(--gold); }
+
+.card-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 5px;
+  letter-spacing: -0.01em;
+}
+.card-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+
+.card-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.meta-pill {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.card.green .meta-pill { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.card.gold  .meta-pill { background: var(--gold-bg);  color: var(--gold);  border: 1px solid var(--gold-border); }
+.card-arrow {
+  font-size: 1.1rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.footer {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.footer span { color: var(--text); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="hub">
+  <div class="hub-eyebrow">OOU · Exam Prep · 2024/2025</div>
+  <h1 class="hub-title">Your Quiz Hub</h1>
+  <p class="hub-sub">Two courses. Two practice sites. Pick one and start drilling.</p>
+
+  <div class="cards">
+
+    <a class="card green" href="ENT_Quiz.html">
+      <div class="card-icon">💡</div>
+      <div class="card-body">
+        <div class="card-course">ENT · Entrepreneurship</div>
+        <div class="card-title">Business Ideas, Tech & E-Business</div>
+        <div class="card-desc">Brainstorming, venture creation, startup outcomes, information age, e-commerce, intranet & supply chain.</div>
+      </div>
+      <div class="card-meta">
+        <div class="meta-pill">40 Questions</div>
+        <div class="meta-pill">3 Modes</div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a class="card gold" href="GST312_Quiz.html">
+      <div class="card-icon">🕊️</div>
+      <div class="card-body">
+        <div class="card-course">GST 312 · Peace Studies</div>
+        <div class="card-title">Conflict, AU, UN, ECOWAS & DDR</div>
+        <div class="card-desc">Peace theory, conflict resolution, African Union & APSA, UN Security Council, ECOWAS, DDR, and transitional justice.</div>
+      </div>
+      <div class="card-meta">
+        <div class="meta-pill">60 Questions</div>
+        <div class="meta-pill">3 Modes</div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="footer">
+    Built for <span>Sammy</span> · OOU Mathematics · 2024/2025 Session<br>
+    Open any quiz, pick a mode, and start preparing 🎯
+  </div>
+</div>
+
+</body>
+</html>

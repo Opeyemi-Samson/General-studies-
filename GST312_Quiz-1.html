@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GST 312 – Peace & Conflict Resolution Quiz</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #0D1117;
+    --surface: #161B22;
+    --border: #21262D;
+    --accent: #238636;
+    --accent-light: #2EA043;
+    --gold: #D4A017;
+    --gold-dim: #9B7316;
+    --text: #E6EDF3;
+    --muted: #7D8590;
+    --red: #DA3633;
+    --blue: #1F6FEB;
+    --option-hover: #1C2128;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--gold); }
+  .header-meta {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.5;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; }
+  .screen.active { display: flex; flex-direction: column; align-items: center; }
+
+  /* ── LANDING ── */
+  #screen-landing {
+    justify-content: center;
+    min-height: calc(100vh - 65px);
+    padding: 40px 20px;
+    text-align: center;
+  }
+  .landing-badge {
+    display: inline-block;
+    background: rgba(212, 160, 23, 0.12);
+    color: var(--gold);
+    border: 1px solid var(--gold-dim);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+  .landing-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.2rem, 6vw, 3.8rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    max-width: 680px;
+    margin-bottom: 16px;
+  }
+  .landing-title em { color: var(--gold); font-style: normal; }
+  .landing-sub {
+    color: var(--muted);
+    max-width: 480px;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+  .topics-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    max-width: 560px;
+    margin-bottom: 44px;
+  }
+  .topic-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.75rem;
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
+  .topic-chip.hi { border-color: var(--accent); color: var(--accent-light); background: rgba(35,134,54,0.08); }
+
+  .mode-cards {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 44px;
+    max-width: 640px;
+  }
+  .mode-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    width: 180px;
+    cursor: pointer;
+    transition: border-color .2s, transform .15s;
+    text-align: left;
+  }
+  .mode-card:hover { border-color: var(--gold-dim); transform: translateY(-2px); }
+  .mode-card.selected { border-color: var(--gold); background: rgba(212,160,23,0.07); }
+  .mode-card .mode-icon { font-size: 1.5rem; margin-bottom: 10px; }
+  .mode-card .mode-label { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+  .mode-card .mode-desc { font-size: 0.72rem; color: var(--muted); line-height: 1.5; }
+
+  .btn-start {
+    background: var(--gold);
+    color: #0D1117;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 14px 44px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background .2s, transform .15s;
+    letter-spacing: 0.02em;
+  }
+  .btn-start:hover { background: #e6b420; transform: translateY(-2px); }
+
+  /* ── QUIZ ── */
+  #screen-quiz {
+    padding: 32px 20px 60px;
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  /* progress */
+  .progress-bar-wrap {
+    width: 100%;
+    background: var(--border);
+    border-radius: 4px;
+    height: 4px;
+    margin-bottom: 32px;
+  }
+  .progress-bar-fill {
+    height: 4px;
+    background: var(--gold);
+    border-radius: 4px;
+    transition: width .4s ease;
+  }
+  .quiz-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .q-counter { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--text); }
+  .timer-badge {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--gold);
+    min-width: 70px;
+    text-align: center;
+  }
+  .timer-badge.danger { color: var(--red); border-color: var(--red); }
+
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 20px;
+  }
+  .q-eyebrow {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 14px;
+  }
+  .q-text {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    font-weight: 500;
+    margin-bottom: 28px;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+    text-align: left;
+    color: var(--text);
+    font-size: 0.93rem;
+    line-height: 1.5;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--gold-dim); background: var(--option-hover); }
+  .option-key {
+    min-width: 28px;
+    height: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+  }
+  .option-btn.correct { border-color: var(--accent-light); background: rgba(35,134,54,0.12); }
+  .option-btn.correct .option-key { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .option-btn.wrong { border-color: var(--red); background: rgba(218,54,51,0.1); }
+  .option-btn.wrong .option-key { background: var(--red); border-color: var(--red); color: #fff; }
+  .option-btn:disabled { cursor: default; }
+
+  .feedback-box {
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    display: none;
+    margin-top: 14px;
+  }
+  .feedback-box.correct { background: rgba(35,134,54,0.1); border: 1px solid var(--accent); color: #58a77b; }
+  .feedback-box.wrong { background: rgba(218,54,51,0.08); border: 1px solid var(--red); color: #e07070; }
+  .feedback-box.show { display: block; }
+
+  .quiz-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+  .btn-nav {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 10px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color .15s;
+  }
+  .btn-nav:hover { border-color: var(--gold-dim); }
+  .btn-nav.primary { background: var(--gold); color: #0D1117; border-color: var(--gold); }
+  .btn-nav.primary:hover { background: #e6b420; }
+  .score-pill {
+    font-size: 0.8rem;
+    background: rgba(212,160,23,0.1);
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+  }
+
+  /* ── RESULTS ── */
+  #screen-results {
+    min-height: calc(100vh - 65px);
+    padding: 48px 20px 80px;
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .results-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .results-grade {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 10vw, 5.5rem);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .grade-A { color: var(--accent-light); }
+  .grade-B { color: var(--blue); }
+  .grade-C { color: var(--gold); }
+  .grade-D, .grade-F { color: var(--red); }
+  .results-score-text {
+    font-size: 1rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .results-verdict {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 32px;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 24px;
+    text-align: center;
+    min-width: 130px;
+    flex: 1;
+  }
+  .stat-val {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.8rem;
+    margin-bottom: 4px;
+  }
+  .stat-val.g { color: var(--accent-light); }
+  .stat-val.r { color: var(--red); }
+  .stat-val.b { color: var(--gold); }
+  .stat-lbl { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  .review-toggle {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    padding: 11px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 28px;
+    transition: border-color .15s;
+    font-size: 0.88rem;
+  }
+  .review-toggle:hover { border-color: var(--gold-dim); }
+
+  .review-list { width: 100%; display: none; }
+  .review-list.open { display: block; }
+  .review-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+  .review-item.ri-correct { border-left: 3px solid var(--accent-light); }
+  .review-item.ri-wrong { border-left: 3px solid var(--red); }
+  .review-q { font-weight: 600; margin-bottom: 8px; color: var(--text); }
+  .review-your { color: var(--red); margin-bottom: 3px; }
+  .review-correct { color: var(--accent-light); }
+  .review-expl { color: var(--muted); margin-top: 6px; font-size: 0.82rem; }
+
+  .results-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 32px;
+  }
+  .btn-action {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 12px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: .15s;
+  }
+  .btn-action.gold { background: var(--gold); color: #0D1117; border: none; }
+  .btn-action.gold:hover { background: #e6b420; }
+  .btn-action.outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-action.outline:hover { border-color: var(--gold-dim); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">GST <span>312</span></div>
+  <div class="header-meta">Peace Studies & Conflict Resolution<br>Olabisi Onabanjo University</div>
+</header>
+
+<!-- LANDING -->
+<div id="screen-landing" class="screen active">
+  <div class="landing-badge">OOU · GST 312 · Exam Prep</div>
+  <h1 class="landing-title">60 Questions.<br><em>Are you ready?</em></h1>
+  <p class="landing-sub">Practice MCQs covering Peace Studies, Conflict Resolution, AU, UN, ECOWAS, APSA, and DDR — exactly the topics on your exam.</p>
+
+  <div class="topics-grid">
+    <div class="topic-chip hi">Peace Theories</div>
+    <div class="topic-chip hi">Conflict Resolution</div>
+    <div class="topic-chip hi">AU / APSA</div>
+    <div class="topic-chip hi">UN & Security Council</div>
+    <div class="topic-chip hi">ECOWAS</div>
+    <div class="topic-chip hi">DDR</div>
+    <div class="topic-chip">Peacekeeping</div>
+    <div class="topic-chip">Mediation & Negotiation</div>
+    <div class="topic-chip">African Security</div>
+    <div class="topic-chip">International Law</div>
+  </div>
+
+  <div class="mode-cards">
+    <div class="mode-card selected" data-mode="practice" onclick="selectMode(this)">
+      <div class="mode-icon">📚</div>
+      <div class="mode-label">Practice</div>
+      <div class="mode-desc">See answers & explanations after each question. No timer.</div>
+    </div>
+    <div class="mode-card" data-mode="timed" onclick="selectMode(this)">
+      <div class="mode-icon">⏱️</div>
+      <div class="mode-label">Timed Exam</div>
+      <div class="mode-desc">60 questions · 60 minutes. Simulates your real exam.</div>
+    </div>
+    <div class="mode-card" data-mode="quick" onclick="selectMode(this)">
+      <div class="mode-icon">⚡</div>
+      <div class="mode-label">Quick 20</div>
+      <div class="mode-desc">Random 20 questions. Great for a fast revision session.</div>
+    </div>
+  </div>
+
+  <button class="btn-start" onclick="startQuiz()">Start Quiz →</button>
+</div>
+
+<!-- QUIZ -->
+<div id="screen-quiz" class="screen">
+  <div class="quiz-meta">
+    <span class="q-counter" id="q-counter">Question 1 of 60</span>
+    <div id="timer-badge" class="timer-badge" style="display:none"></div>
+    <span class="score-pill" id="score-pill">0 / 0</span>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-eyebrow" id="q-eyebrow">Peace & Conflict</div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback-box" id="feedback-box"></div>
+  </div>
+
+  <div class="quiz-nav">
+    <button class="btn-nav" onclick="prevQ()" id="btn-prev" style="display:none">← Prev</button>
+    <button class="btn-nav primary" onclick="nextQ()" id="btn-next" style="display:none">Next →</button>
+    <button class="btn-nav primary" onclick="finishQuiz()" id="btn-finish" style="display:none">Finish Quiz</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="screen-results" class="screen">
+  <div class="results-header">
+    <div class="results-grade" id="res-grade"></div>
+    <div class="results-score-text" id="res-score-text"></div>
+    <div class="results-verdict" id="res-verdict"></div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-val g" id="res-correct">0</div><div class="stat-lbl">Correct</div></div>
+      <div class="stat-card"><div class="stat-val r" id="res-wrong">0</div><div class="stat-lbl">Wrong</div></div>
+      <div class="stat-card"><div class="stat-val b" id="res-skipped">0</div><div class="stat-lbl">Skipped</div></div>
+      <div class="stat-card"><div class="stat-val b" id="res-time">—</div><div class="stat-lbl">Time Taken</div></div>
+    </div>
+    <button class="review-toggle" onclick="toggleReview()">📋 Review Answers</button>
+    <div class="review-list" id="review-list"></div>
+  </div>
+  <div class="results-actions">
+    <button class="btn-action gold" onclick="restartSame()">Retry Same Mode</button>
+    <button class="btn-action outline" onclick="goHome()">← Back to Home</button>
+  </div>
+</div>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+const ALL_QUESTIONS = [
+  // PEACE THEORY
+  { topic:"Peace Theory", q:"Which of the following best defines 'positive peace' as described by Johan Galtung?", opts:["The absence of direct physical violence","The presence of justice, equality, and structural harmony","A state of permanent ceasefire between warring nations","The deployment of peacekeeping forces"], ans:1, expl:"Galtung distinguished negative peace (absence of war) from positive peace, which includes social justice and the elimination of structural violence." },
+  { topic:"Peace Theory", q:"Johan Galtung coined the concept of 'structural violence' to describe:", opts:["Military attacks on civilian infrastructure","Harm caused by social structures that prevent people from meeting basic needs","Violence carried out by armed non-state actors","Psychological trauma caused by conflict"], ans:1, expl:"Structural violence refers to systematic harm embedded in social, political, and economic structures — e.g. poverty, discrimination — rather than direct physical harm." },
+  { topic:"Peace Theory", q:"'Negative peace' refers to:", opts:["The deliberate undermining of peace agreements","The absence of direct violent conflict","Economic sanctions imposed on belligerent states","Armed neutrality during inter-state war"], ans:1, expl:"Negative peace is simply the absence of war or direct violence, without necessarily addressing underlying social inequalities." },
+  { topic:"Peace Theory", q:"The concept of 'human security' emphasises:", opts:["Military deterrence as the primary security guarantee","Security of the individual, not just the state","Nuclear non-proliferation treaties","The role of great powers in maintaining order"], ans:1, expl:"Human security, articulated in the 1994 UNDP Human Development Report, shifts focus from state security to individual well-being across seven dimensions." },
+  { topic:"Peace Theory", q:"Which school of thought argues that states are the primary actors in international relations and that anarchy drives competition?", opts:["Liberalism","Constructivism","Realism","Critical Theory"], ans:2, expl:"Realism holds that sovereign states operate in an anarchic international system, making power and self-interest the primary drivers of behaviour." },
+
+  // CONFLICT TYPES & CAUSES
+  { topic:"Conflict Types", q:"An intra-state conflict is best described as:", opts:["A war between two sovereign nations","A conflict that occurs within the borders of a single country","A dispute managed exclusively by the UN Security Council","A conflict involving more than three countries"], ans:1, expl:"Intra-state (or internal) conflicts occur within a country's borders, often between the government and armed groups, or between ethnic/religious communities." },
+  { topic:"Conflict Types", q:"Which of the following is an example of 'resource conflict'?", opts:["A territorial dispute over a maritime boundary","Fighting over control of oil fields or diamond mines","An ideological civil war between political parties","A border dispute stemming from colonial map-drawing"], ans:1, expl:"Resource conflicts are driven by competition over valuable natural resources such as oil, minerals, water, or land." },
+  { topic:"Conflict Types", q:"Ethno-religious conflicts are primarily rooted in:", opts:["Competition for international trade routes","Differences in ethnic identity, religion, or cultural values","Disagreements over international treaty obligations","Military alliances between neighbouring states"], ans:1, expl:"Ethno-religious conflicts arise from perceived incompatibility of ethnic identities, religious beliefs, or cultural values between groups." },
+  { topic:"Conflict Types", q:"The 'greed versus grievance' thesis in civil war scholarship argues that civil wars are caused mainly by:", opts:["Ideological differences between elites","Opportunities for economic predation (greed) or legitimate political grievances","The intervention of foreign powers","Weakness of democratic institutions"], ans:1, expl:"Collier and Hoeffler's research suggested economic motives (greed) often outweigh political grievances as drivers of civil conflict." },
+  { topic:"Conflict Types", q:"A proxy war occurs when:", opts:["Two nations fight directly over a disputed territory","External powers support opposing sides of an internal conflict","The UN Security Council authorises military intervention","A regional body imposes a ceasefire"], ans:1, expl:"In a proxy war, external states or actors fund and arm opposing sides within another country's conflict, advancing their own interests without direct confrontation." },
+
+  // CONFLICT RESOLUTION
+  { topic:"Conflict Resolution", q:"Mediation differs from arbitration in that:", opts:["Mediation results in a legally binding decision; arbitration does not","In mediation, a neutral third party facilitates agreement without imposing a solution","Arbitration requires the presence of the UN Secretary-General","Mediation is only used in inter-state disputes"], ans:1, expl:"In mediation, the mediator helps parties reach a voluntary agreement. In arbitration, the arbitrator imposes a binding decision." },
+  { topic:"Conflict Resolution", q:"The concept of 'Track II diplomacy' refers to:", opts:["Formal negotiations between heads of state","Unofficial dialogue between non-governmental actors to build trust and explore solutions","Military-to-military communications during ceasefire","UN-mandated peacekeeping deployments"], ans:1, expl:"Track II diplomacy involves unofficial, informal interactions — academics, NGOs, citizens — that complement official (Track I) government negotiations." },
+  { topic:"Conflict Resolution", q:"A ceasefire agreement primarily achieves:", opts:["A permanent end to the conflict's root causes","A temporary halt to active fighting to allow negotiations or humanitarian access","The disarmament of all armed factions","International recognition of a new political government"], ans:1, expl:"A ceasefire stops active hostilities but does not resolve underlying causes; it creates space for negotiations or humanitarian relief." },
+  { topic:"Conflict Resolution", q:"Power-sharing arrangements in post-conflict settings are designed to:", opts:["Transfer all power to the winning faction","Give all significant groups a stake in governance to prevent renewed violence","Establish an international administration of the territory","Restore the pre-conflict constitutional order"], ans:1, expl:"Power-sharing (e.g. Burundi, Lebanon) ensures previously warring groups have representation, reducing incentives to return to violence." },
+  { topic:"Conflict Resolution", q:"Confidence-building measures (CBMs) are used to:", opts:["Impose economic sanctions on parties that breach agreements","Reduce mutual suspicion and improve transparency between conflicting parties","Transfer peacekeeping authority from the UN to regional bodies","Establish refugee return protocols"], ans:1, expl:"CBMs — such as open skies agreements, military hotlines, and joint patrols — reduce misperceptions and build trust between adversaries." },
+
+  // UN
+  { topic:"United Nations", q:"The United Nations was founded in:", opts:["1919","1945","1948","1960"], ans:1, expl:"The UN was established on 24 October 1945, following the Second World War, replacing the League of Nations." },
+  { topic:"United Nations", q:"Which UN body bears primary responsibility for international peace and security?", opts:["UN General Assembly","International Court of Justice","UN Security Council","UN Secretariat"], ans:2, expl:"Under the UN Charter (Chapter VI & VII), the Security Council has primary responsibility for maintaining international peace and security." },
+  { topic:"United Nations", q:"The five permanent members (P5) of the UN Security Council are:", opts:["USA, UK, France, Russia, China","USA, UK, France, Germany, Russia","USA, UK, China, Japan, India","USA, Russia, China, Brazil, France"], ans:0, expl:"The P5 — USA, UK, France, Russia (formerly USSR), and China — hold veto power in the Security Council, a structure established in 1945." },
+  { topic:"United Nations", q:"UN Chapter VII authorises the Security Council to:", opts:["Recommend peaceful settlement of disputes between member states","Take enforcement action, including military force, to restore international peace","Elect the Secretary-General","Admit new member states to the UN"], ans:1, expl:"Chapter VII empowers the Security Council to authorise sanctions and military force when peaceful means fail to resolve threats to international peace." },
+  { topic:"United Nations", q:"The 'Responsibility to Protect' (R2P) doctrine was formally endorsed by:", opts:["The 1945 UN Charter","The 2005 UN World Summit Outcome Document","Security Council Resolution 1325 (2000)","The 1948 Universal Declaration of Human Rights"], ans:1, expl:"R2P was unanimously endorsed at the 2005 UN World Summit, affirming that states have a responsibility to protect populations from genocide, war crimes, ethnic cleansing, and crimes against humanity." },
+  { topic:"United Nations", q:"UN Security Council Resolution 1325 (2000) specifically addresses:", opts:["Nuclear disarmament obligations","Women, peace, and security","Counter-terrorism measures","Children in armed conflict"], ans:1, expl:"Resolution 1325 on Women, Peace and Security recognised the disproportionate impact of conflict on women and called for their greater participation in peace processes." },
+  { topic:"United Nations", q:"The role of the UN Secretary-General in conflict resolution includes:", opts:["Commanding UN peacekeeping troops directly","Good offices, fact-finding, and facilitating negotiations","Imposing economic sanctions on member states","Casting a veto at the Security Council"], ans:1, expl:"The Secretary-General uses good offices — informal diplomatic channels — to mediate disputes and facilitate negotiations without commanding military forces." },
+
+  // AFRICAN UNION
+  { topic:"African Union", q:"The African Union (AU) was officially launched in:", opts:["1963","1991","2002","2010"], ans:2, expl:"The AU was launched in Durban, South Africa on 9 July 2002, replacing the Organisation of African Unity (OAU) established in 1963." },
+  { topic:"African Union", q:"The founding document of the African Union is the:", opts:["Lagos Plan of Action","Abuja Treaty","Constitutive Act of the African Union","Charter of the OAU"], ans:2, expl:"The Constitutive Act of the African Union, adopted in Lomé, Togo in 2000, is the founding legal instrument of the AU." },
+  { topic:"African Union", q:"A major difference between the AU and its predecessor OAU is that the AU:", opts:["Excludes North African states from membership","Has the right to intervene in member states in grave circumstances","Does not have a permanent secretariat","Requires unanimous consent for all decisions"], ans:1, expl:"Article 4(h) of the AU Constitutive Act grants the AU the right to intervene in cases of genocide, war crimes, and crimes against humanity — a departure from the OAU's strict non-interference principle." },
+  { topic:"African Union", q:"The Peace and Security Council (PSC) of the African Union is:", opts:["A judicial body that prosecutes war crimes","The AU's standing decision-making organ on conflict prevention and resolution","An economic coordination committee","A humanitarian aid fund for displaced persons"], ans:1, expl:"The PSC is the AU's standing organ for the prevention, management, and resolution of conflicts, established by the PSC Protocol of 2002." },
+  { topic:"African Union", q:"The African Peace and Security Architecture (APSA) consists of:", opts:["The AU Commission, African Court, and African Parliament only","Five pillars including the PSC, CEWS, ASF, Panel of the Wise, and PCRD","A single peacekeeping command under the AU Chairperson","Only the African Standby Force and the Continental Early Warning System"], ans:1, expl:"APSA has five key pillars: the Peace and Security Council (PSC), Continental Early Warning System (CEWS), African Standby Force (ASF), Panel of the Wise, and the Post-Conflict Reconstruction and Development (PCRD) framework." },
+  { topic:"African Union", q:"The Continental Early Warning System (CEWS) is designed to:", opts:["Coordinate African peacekeeping troop deployment","Monitor and analyse data to provide early warning of potential conflicts to the PSC","Manage post-conflict economic reconstruction","Train African military officers in counter-terrorism"], ans:1, expl:"CEWS collects and analyses political, military, and humanitarian data to give the PSC advance notice of escalating situations across Africa." },
+  { topic:"African Union", q:"The African Standby Force (ASF) is structured as:", opts:["A single AU-commanded multinational army based in Addis Ababa","Five regional standby brigades corresponding to Africa's sub-regions","A rapid deployment force of 10,000 permanent AU soldiers","A volunteer civilian police corps under the UN"], ans:1, expl:"The ASF comprises five regional brigades (NASBRIG, EASBRIG, ESABRIG, SADCBRIG, ECOBRIG) from North, East, Central, Southern, and West Africa." },
+  { topic:"African Union", q:"The AU Panel of the Wise is composed of:", opts:["Five serving heads of state elected by the Assembly","Five respected African personalities appointed for their contributions to peace","The AU Commission Chairperson and four deputy commissioners","Legal scholars from the African Court on Human and Peoples' Rights"], ans:1, expl:"The Panel of the Wise consists of five highly respected African figures, one from each of the AU's five regions, who support peace efforts through advice and mediation." },
+
+  // APSA & POST-CONFLICT
+  { topic:"APSA", q:"Post-Conflict Reconstruction and Development (PCRD) within APSA focuses on:", opts:["Rapid military rearmament of former combatants","Rebuilding institutions, economies, and societies after conflict to prevent relapse","Establishing AU military bases in post-conflict states","Conducting war crimes trials for conflict leaders"], ans:1, expl:"PCRD addresses the political, socioeconomic, humanitarian, and security dimensions of rebuilding after conflict, including institution-building and reconciliation." },
+  { topic:"APSA", q:"AMISOM (African Union Mission in Somalia) is an example of:", opts:["An AU diplomatic mediation effort","An African Union-led peace support operation","An ECOWAS sanctions regime","A UN Chapter VII enforcement action commanded by the AU"], ans:1, expl:"AMISOM was an AU-mandated and -led peace support operation in Somalia, authorised by the UN Security Council, demonstrating the AU's operational role in peace enforcement." },
+  { topic:"APSA", q:"The 'Ezulwini Consensus' (2005) represents Africa's position on:", opts:["Trade liberalisation within the African Continental Free Trade Area","UN Security Council reform, including the case for African permanent seats","Climate change negotiations at the UNFCCC","The repatriation of African cultural artefacts"], ans:1, expl:"The Ezulwini Consensus articulated Africa's demand for two permanent seats with veto power and five non-permanent seats on a reformed UN Security Council." },
+
+  // ECOWAS
+  { topic:"ECOWAS", q:"ECOWAS stands for:", opts:["East African Community of West African States","Economic Community of West African States","Economic Coalition of West African Security","East and Central Organisation of West African States"], ans:1, expl:"ECOWAS — Economic Community of West African States — was established by the Treaty of Lagos in 1975 to promote economic integration and security in West Africa." },
+  { topic:"ECOWAS", q:"ECOWAS was established in:", opts:["1963","1975","1990","2002"], ans:1, expl:"ECOWAS was founded on 28 May 1975 through the Treaty of Lagos, with 15 founding member states." },
+  { topic:"ECOWAS", q:"ECOMOG is the military arm of ECOWAS and stands for:", opts:["ECOWAS Monitoring Group","ECOWAS Military Operations Group","Economic Community Military Observer Group","ECOWAS Combined Military Operations Group"], ans:0, expl:"ECOMOG — ECOWAS Ceasefire Monitoring Group — is ECOWAS's military intervention force, notably deployed in Liberia (1990) and Sierra Leone (1997)." },
+  { topic:"ECOWAS", q:"The ECOWAS Protocol on Non-Aggression (1978) obliges member states to:", opts:["Contribute troops to regional peacekeeping operations","Refrain from attacking one another or supporting attacks against fellow members","Adopt a common currency and monetary policy","Remove all tariffs on goods traded within the sub-region"], ans:1, expl:"The 1978 Protocol on Non-Aggression was ECOWAS's first security instrument, prohibiting aggression among member states." },
+  { topic:"ECOWAS", q:"The ECOWAS Mechanism for Conflict Prevention, Management, Resolution, Peacekeeping and Security (1999) established:", opts:["A free trade zone for West African agricultural products","A framework including a Mediation and Security Council and authority for humanitarian intervention","A common external tariff for ECOWAS members","A joint ECOWAS–AU security patrol along the Sahel border"], ans:1, expl:"The 1999 Mechanism institutionalised ECOWAS's role in peace and security, creating decision-making structures and defining conditions for intervention." },
+  { topic:"ECOWAS", q:"ECOWAS intervened militarily in Liberia in 1990 primarily because:", opts:["Liberia threatened to leave ECOWAS","The brutal civil war created massive humanitarian suffering and regional instability","The UN Security Council requested ECOWAS to act","Liberia's government invited ECOWAS troops"], ans:1, expl:"ECOMOG's 1990 intervention in Liberia responded to a devastating civil war and the collapse of the Liberian state under Samuel Doe, despite the absence of a UN mandate at the time." },
+
+  // DDR
+  { topic:"DDR", q:"DDR in post-conflict contexts stands for:", opts:["Disengagement, Demilitarisation, and Repatriation","Disarmament, Demobilisation, and Reintegration","Defence, Deterrence, and Reconstruction","Diplomacy, Dialogue, and Reconciliation"], ans:1, expl:"DDR — Disarmament, Demobilisation, and Reintegration — is a process that addresses the security of ex-combatants and contributes to security and stability in post-conflict environments." },
+  { topic:"DDR", q:"The 'Disarmament' phase of DDR involves:", opts:["Integrating former fighters into civilian social and economic life","Collecting, documenting, and disposing of weapons from combatants","Dissolving armed units and providing short-term support to ex-combatants","Establishing transitional justice mechanisms for human rights abusers"], ans:1, expl:"Disarmament is the collection, documentation, control, and disposal of small arms, ammunition, explosives, and light and heavy weapons of combatants." },
+  { topic:"DDR", q:"The 'Demobilisation' phase of DDR refers to:", opts:["Signing a ceasefire agreement between warring parties","The formal and controlled discharge of active combatants from armed forces or groups","The long-term social and economic inclusion of ex-fighters","The seizure of weapons from civilian populations"], ans:1, expl:"Demobilisation is the formal process of discharging combatants from military structures, often involving cantonment (assembling fighters) and transitional support packages." },
+  { topic:"DDR", q:"'Reintegration' in DDR is considered the most challenging phase because:", opts:["It requires UN Security Council authorisation","It involves long-term social, economic, and political processes extending beyond the immediate post-conflict period","It depends solely on the government's military budget","It must be completed before disarmament can begin"], ans:1, expl:"Reintegration — helping ex-combatants find civilian livelihoods and community acceptance — is long-term, resource-intensive, and susceptible to spoilers and economic shocks." },
+  { topic:"DDR", q:"Child soldiers present a particular challenge in DDR because:", opts:["International law prohibits including children in DDR programmes","They require specialised psychosocial rehabilitation, family tracing, and education rather than standard ex-combatant support","They always voluntarily disarm without incentive programmes","They are legally treated as adult combatants under international humanitarian law"], ans:1, expl:"Children associated with armed groups need child-specific DDR pathways focused on psychosocial recovery, education, family reunification, and community reintegration rather than adult economic packages." },
+  { topic:"DDR", q:"Security Sector Reform (SSR) and DDR are related in that:", opts:["SSR must be completed before DDR can begin","DDR supports SSR by removing excess armed actors while SSR builds accountable state security institutions","SSR replaces DDR in stable post-conflict environments","They operate in completely separate policy domains"], ans:1, expl:"DDR and SSR are complementary: DDR reduces the number of armed actors, while SSR builds legitimate, accountable security and justice institutions in their place." },
+
+  // PEACEKEEPING
+  { topic:"Peacekeeping", q:"The three foundational principles of UN peacekeeping are:", opts:["Non-alignment, Sovereignty, and Impartiality","Consent of the parties, Impartiality, and Non-use of force except in self-defence and mandate protection","Neutrality, Disarmament, and Post-conflict reconstruction","Collective security, Human rights, and Democratic governance"], ans:1, expl:"UN peacekeeping is guided by consent of host parties, impartiality, and non-use of force except in self-defence — principles that distinguish peacekeeping from peace enforcement." },
+  { topic:"Peacekeeping", q:"'Peacemaking' in UN terminology refers to:", opts:["Deploying military forces to enforce a ceasefire","Diplomatic processes aimed at halting conflict and reaching a peace agreement","Long-term post-conflict reconstruction","The prevention of conflict before it erupts"], ans:1, expl:"Peacemaking involves diplomatic measures to bring hostile parties to agreement, including mediation, conciliation, negotiation, and good offices." },
+  { topic:"Peacekeeping", q:"'Peace enforcement' differs from peacekeeping in that peace enforcement:", opts:["Requires the consent of the conflicting parties","Can be used without the consent of conflicting parties to impose peace under Chapter VII","Is authorised only by regional organisations, not the UN","Involves only civilian, not military, personnel"], ans:1, expl:"Peace enforcement, authorised under Chapter VII, can be used coercively against an aggressor or party without its consent, unlike traditional peacekeeping which requires consent." },
+  { topic:"Peacekeeping", q:"The concept of 'peacebuilding' encompasses:", opts:["Military operations during active conflict","Long-term activities after conflict to build sustainable peace, including reconciliation, institution-building, and development","Only the deployment of police monitors","Diplomatic negotiations to achieve a ceasefire"], ans:1, expl:"Peacebuilding addresses the root causes of conflict through institution-building, economic development, reconciliation, and governance reform to prevent conflict relapse." },
+  { topic:"Peacekeeping", q:"The 2000 'Brahimi Report' called for reforms to UN peacekeeping, recommending:", opts:["The abolition of all UN peacekeeping operations","Clearer and more achievable mandates, better resources, and rapid deployment capacity","A mandatory contribution of troops from all P5 members","The merger of peacekeeping with humanitarian operations under OCHA"], ans:1, expl:"The Brahimi Report (UN Panel on Peace Operations, 2000) recommended realistic mandates, adequate resources, rapid deployment within 30 days, and a doctrine allowing peacekeepers to defend themselves robustly." },
+
+  // INTERNATIONAL LAW & HUMAN RIGHTS
+  { topic:"International Law", q:"International Humanitarian Law (IHL) governs:", opts:["Economic relations between states during peacetime","The conduct of armed conflict and seeks to limit its effects on persons and property","The prosecution of corporate violations of human rights","Immigration and refugee policy in peacetime"], ans:1, expl:"IHL (the laws of war) — principally the Geneva Conventions — regulates how armed conflict is conducted, protecting civilians, wounded combatants, and prisoners of war." },
+  { topic:"International Law", q:"The 1951 Refugee Convention defines a refugee as a person who:", opts:["Has left their country voluntarily for economic reasons","Flees their country owing to a well-founded fear of persecution based on race, religion, nationality, political opinion, or membership of a particular social group","Has been internally displaced by natural disaster","Has been deported by their government"], ans:1, expl:"The 1951 Refugee Convention's definition (expanded by the 1967 Protocol) is the cornerstone of international refugee protection law." },
+  { topic:"International Law", q:"The International Criminal Court (ICC) was established by the:", opts:["UN Security Council in 1993","Rome Statute in 1998","Geneva Convention of 1949","Maastricht Treaty of 1992"], ans:1, expl:"The ICC was created by the Rome Statute adopted on 17 July 1998 and entered into force in 2002, providing a permanent court to prosecute genocide, war crimes, and crimes against humanity." },
+  { topic:"International Law", q:"'Non-refoulement' is a principle in international law that:", opts:["Prohibits the transfer of military equipment to conflict zones","Prevents a state from returning a person to a country where they face serious risk of persecution or harm","Requires states to contribute to UN peacekeeping missions","Prohibits the use of certain weapons in civilian areas"], ans:1, expl:"Non-refoulement, a cornerstone of refugee and human rights law, obliges states not to return individuals to places where they face persecution, torture, or inhuman treatment." },
+
+  // NIGERIA & REGIONAL CONFLICTS
+  { topic:"Nigeria & Regional Conflicts", q:"Operation ECOMOG's intervention in Sierra Leone (1997) was triggered by:", opts:["A border conflict between Sierra Leone and Guinea","A military coup by the Armed Forces Revolutionary Council (AFRC) that ousted elected President Kabbah","An ethnic conflict between the Mende and Temne peoples","A disputed presidential election result"], ans:1, expl:"ECOMOG intervened in Sierra Leone in 1997 after a military coup by the AFRC (allied with the RUF) ousted democratically elected President Ahmad Tejan Kabbah." },
+  { topic:"Nigeria & Regional Conflicts", q:"The Boko Haram insurgency in Nigeria is primarily concentrated in:", opts:["The Niger Delta region","The North-East geopolitical zone","Lagos and the South-West states","The Middle Belt states of Plateau and Benue"], ans:1, expl:"Boko Haram's insurgency has been centred in Nigeria's North-East, particularly Borno, Yobe, and Adamawa states, and has spilled into the Lake Chad Basin." },
+  { topic:"Nigeria & Regional Conflicts", q:"The Multinational Joint Task Force (MNJTF) against Boko Haram comprises troops from:", opts:["Nigeria, Ghana, Senegal, Sierra Leone, and Liberia","Nigeria, Niger, Chad, Cameroon, and Benin","Nigeria, Mali, Burkina Faso, and Mauritania","Nigeria, Côte d'Ivoire, Guinea, and Togo"], ans:1, expl:"The MNJTF is made up of military forces from the Lake Chad Basin Commission members — Nigeria, Niger, Chad, Cameroon — and Benin Republic." },
+  { topic:"Nigeria & Regional Conflicts", q:"The Niger Delta conflict is primarily driven by:", opts:["Ethnic tensions between Igbo and Yoruba communities","Grievances over oil revenue distribution and environmental degradation in oil-producing communities","A secessionist movement seeking an independent Biafra state","Cross-border cattle herder–farmer conflicts"], ans:1, expl:"The Niger Delta conflict centres on grievances about inequitable distribution of oil revenues, environmental pollution, and underdevelopment of oil-producing communities like Ogoni and Ijaw." },
+
+  // TRANSITIONAL JUSTICE & RECONCILIATION
+  { topic:"Transitional Justice", q:"Truth and Reconciliation Commissions (TRCs) are primarily designed to:", opts:["Conduct criminal prosecutions of human rights violators","Establish an official historical record of abuses and promote national reconciliation","Determine territorial boundaries after conflict","Manage the economic reintegration of displaced communities"], ans:1, expl:"TRCs — such as South Africa's post-apartheid TRC — document human rights abuses, provide victims a voice, and promote national healing, often as an alternative or complement to criminal trials." },
+  { topic:"Transitional Justice", q:"South Africa's Truth and Reconciliation Commission (TRC) operated on the principle of:", opts:["Full criminal prosecution with mandatory imprisonment","Conditional amnesty in exchange for full public disclosure of politically motivated crimes","Unconditional pardon for all apartheid-era offenders","Financial reparations without any formal acknowledgment of crimes"], ans:1, expl:"South Africa's TRC offered conditional amnesty to those who fully disclosed politically motivated crimes — balancing accountability with the need for national reconciliation after apartheid." },
+  { topic:"Transitional Justice", q:"Transitional justice mechanisms typically include:", opts:["Peacekeeping deployments and DDR only","Criminal prosecutions, truth commissions, reparations, and institutional reform","Trade agreements and development assistance","Constitutional referenda and democratic elections alone"], ans:1, expl:"Transitional justice encompasses four main pillars: criminal accountability, truth-seeking, reparations for victims, and guarantees of non-recurrence through institutional reform." },
+
+  // GENDER & CONFLICT
+  { topic:"Gender & Conflict", q:"Women are disproportionately affected by armed conflict because:", opts:["They form the majority of combatants in most African conflicts","They often face sexual violence as a weapon of war and bear primary responsibility for displaced families","International law provides fewer protections for women than men in conflict","Women rarely participate in peace processes so their interests go unprotected"], ans:1, expl:"Women face gender-specific harms in conflict — including sexual violence, increased domestic burdens, and economic marginalisation — while remaining systematically excluded from formal peace negotiations." },
+  { topic:"Gender & Conflict", q:"The 'Women, Peace, and Security' (WPS) agenda, launched by UNSCR 1325, calls for:", opts:["All-female peacekeeping battalions in every UN operation","Women's full and meaningful participation in conflict prevention, peace negotiations, and post-conflict reconstruction","A global arms embargo until gender equality targets are met","The establishment of gender ministries in all post-conflict states"], ans:1, expl:"The WPS agenda recognises women as agents of peace, not just victims, and calls for their inclusion at all stages of conflict prevention and resolution." },
+
+  // CONCEPTS & DEFINITIONS
+  { topic:"Key Concepts", q:"'Track I diplomacy' refers to:", opts:["Informal peacebuilding by civil society actors","Official state-to-state negotiations conducted by government representatives","Intelligence-sharing agreements between security services","Humanitarian negotiations for access to conflict zones"], ans:1, expl:"Track I diplomacy is formal, government-level negotiation between state representatives — the traditional realm of foreign ministers and ambassadors." },
+  { topic:"Key Concepts", q:"The 'Spoiler Problem' in peace processes refers to:", opts:["Lack of international funding for peace agreements","Groups or individuals who see a peace agreement as a threat to their interests and act to undermine it","Disagreements among mediators about negotiation strategy","Delays caused by slow UN Security Council decision-making"], ans:1, expl:"Spoilers — identified by Stephen John Stedman — are leaders or parties who use violence to derail peace agreements they perceive as threatening their power or interests." },
+  { topic:"Key Concepts", q:"The 'Liberal Peace' thesis argues that:", opts:["Authoritarian states are more stable and therefore more peaceful","Democracies that are economically interdependent are unlikely to go to war with one another","International organisations cannot prevent conflict between states","Regional organisations are more effective than the UN at preventing wars"], ans:1, expl:"The Liberal Peace (Democratic Peace Theory) holds that liberal democracies rarely fight each other due to shared norms, institutional constraints, and economic interdependence." },
+  { topic:"Key Concepts", q:"Conflict transformation, as distinct from conflict resolution, aims to:", opts:["Achieve a quick ceasefire to stop immediate bloodshed","Address the deeper structural, relational, and cultural roots of conflict to build long-term peace","Transfer conflict management responsibility to the UN","Enforce compliance with peace agreements through sanctions"], ans:1, expl:"Conflict transformation (Lederach) goes beyond resolving immediate disputes to change the relationships, structures, and cultural patterns that generate destructive conflict." },
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let mode = 'practice';
+let questions = [];
+let current = 0;
+let answers = {}; // index → chosen option index
+let score = 0;
+let timerInterval = null;
+let timerSeconds = 0;
+let quizStartTime = null;
+let quizEndTime = null;
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function selectMode(el) {
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  mode = el.dataset.mode;
+}
+
+function fmtTime(secs) {
+  const m = Math.floor(secs / 60).toString().padStart(2,'0');
+  const s = (secs % 60).toString().padStart(2,'0');
+  return `${m}:${s}`;
+}
+
+// ─── START ────────────────────────────────────────────────────────────────────
+function startQuiz() {
+  let pool = shuffle(ALL_QUESTIONS);
+  if (mode === 'quick') pool = pool.slice(0, 20);
+  questions = pool;
+  current = 0;
+  answers = {};
+  score = 0;
+  quizStartTime = Date.now();
+
+  const timerBadge = document.getElementById('timer-badge');
+
+  if (mode === 'timed') {
+    timerSeconds = 60 * 60;
+    timerBadge.style.display = 'block';
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      timerBadge.textContent = fmtTime(timerSeconds);
+      if (timerSeconds <= 300) timerBadge.classList.add('danger');
+      if (timerSeconds <= 0) finishQuiz();
+    }, 1000);
+    timerBadge.textContent = fmtTime(timerSeconds);
+  } else {
+    timerBadge.style.display = 'none';
+  }
+
+  showScreen('screen-quiz');
+  renderQ();
+}
+
+// ─── RENDER QUESTION ──────────────────────────────────────────────────────────
+function renderQ() {
+  const q = questions[current];
+  const total = questions.length;
+
+  document.getElementById('q-counter').textContent = `Question ${current + 1} of ${total}`;
+  document.getElementById('q-eyebrow').textContent = q.topic;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('progress-fill').style.width = `${((current) / total) * 100}%`;
+  document.getElementById('score-pill').textContent = `${score} / ${current}`;
+
+  // options
+  const optEl = document.getElementById('options');
+  optEl.innerHTML = '';
+  const keys = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-key">${keys[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    optEl.appendChild(btn);
+  });
+
+  // feedback
+  const fb = document.getElementById('feedback-box');
+  fb.className = 'feedback-box';
+  fb.textContent = '';
+
+  // nav
+  document.getElementById('btn-prev').style.display = (current > 0 && mode === 'practice') ? 'block' : 'none';
+  document.getElementById('btn-next').style.display = 'none';
+  document.getElementById('btn-finish').style.display = 'none';
+
+  // restore answer if already answered (in practice prev/next)
+  if (answers[current] !== undefined) {
+    restoreAnswer();
+  }
+}
+
+function restoreAnswer() {
+  const q = questions[current];
+  const chosen = answers[current];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+  btns[chosen].classList.add(chosen === q.ans ? 'correct' : 'wrong');
+  if (chosen !== q.ans) btns[q.ans].classList.add('correct');
+
+  if (mode === 'practice') {
+    const fb = document.getElementById('feedback-box');
+    const correct = chosen === q.ans;
+    fb.className = `feedback-box ${correct ? 'correct' : 'wrong'} show`;
+    fb.textContent = correct ? `✓ Correct! ${q.expl}` : `✗ The correct answer is ${['A','B','C','D'][q.ans]}. ${q.expl}`;
+  }
+
+  showNavAfterAnswer();
+}
+
+function selectAnswer(chosen) {
+  if (answers[current] !== undefined) return; // already answered
+  const q = questions[current];
+  answers[current] = chosen;
+
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+  btns[chosen].classList.add(chosen === q.ans ? 'correct' : 'wrong');
+  if (chosen !== q.ans) btns[q.ans].classList.add('correct');
+
+  if (chosen === q.ans) score++;
+  document.getElementById('score-pill').textContent = `${score} / ${current + 1}`;
+
+  if (mode === 'practice') {
+    const fb = document.getElementById('feedback-box');
+    const correct = chosen === q.ans;
+    fb.className = `feedback-box ${correct ? 'correct' : 'wrong'} show`;
+    fb.textContent = correct ? `✓ Correct! ${q.expl}` : `✗ The correct answer is ${['A','B','C','D'][q.ans]}. ${q.expl}`;
+  }
+
+  showNavAfterAnswer();
+}
+
+function showNavAfterAnswer() {
+  const isLast = current === questions.length - 1;
+  document.getElementById('btn-next').style.display = isLast ? 'none' : 'block';
+  document.getElementById('btn-finish').style.display = isLast ? 'block' : 'none';
+}
+
+function nextQ() {
+  if (current < questions.length - 1) {
+    current++;
+    renderQ();
+  }
+}
+function prevQ() {
+  if (current > 0) { current--; renderQ(); }
+}
+
+// ─── FINISH ───────────────────────────────────────────────────────────────────
+function finishQuiz() {
+  clearInterval(timerInterval);
+  quizEndTime = Date.now();
+  showResults();
+}
+
+function showResults() {
+  const total = questions.length;
+  const pct = Math.round((score / total) * 100);
+  const wrong = Object.keys(answers).filter(i => answers[i] !== questions[i].ans).length;
+  const skipped = total - Object.keys(answers).length;
+
+  // grade
+  let grade, gradeClass, verdict;
+  if (pct >= 70) { grade = 'A'; gradeClass = 'grade-A'; verdict = '🏆 Excellent! You\'re exam ready.'; }
+  else if (pct >= 60) { grade = 'B'; gradeClass = 'grade-B'; verdict = '👍 Good job — polish a few weak spots.'; }
+  else if (pct >= 50) { grade = 'C'; gradeClass = 'grade-C'; verdict = '📚 Fair effort. Review the topics you missed.'; }
+  else if (pct >= 40) { grade = 'D'; gradeClass = 'grade-D'; verdict = '⚠️ Below average — time for serious revision.'; }
+  else { grade = 'F'; gradeClass = 'grade-F'; verdict = '🔁 Go back to the notes and try again!'; }
+
+  document.getElementById('res-grade').textContent = `${pct}%`;
+  document.getElementById('res-grade').className = `results-grade ${gradeClass}`;
+  document.getElementById('res-score-text').textContent = `${score} correct out of ${total} questions`;
+  document.getElementById('res-verdict').textContent = verdict;
+  document.getElementById('res-correct').textContent = score;
+  document.getElementById('res-wrong').textContent = wrong;
+  document.getElementById('res-skipped').textContent = skipped;
+
+  const elapsed = Math.floor((quizEndTime - quizStartTime) / 1000);
+  document.getElementById('res-time').textContent = fmtTime(elapsed);
+
+  // Build review
+  const rl = document.getElementById('review-list');
+  rl.innerHTML = '';
+  rl.classList.remove('open');
+  questions.forEach((q, i) => {
+    const userAns = answers[i];
+    const correct = userAns === q.ans;
+    const div = document.createElement('div');
+    div.className = `review-item ${correct ? 'ri-correct' : 'ri-wrong'}`;
+    const keys = ['A','B','C','D'];
+    div.innerHTML = `
+      <div class="review-q">Q${i+1}: ${q.q}</div>
+      ${userAns !== undefined
+        ? `<div class="review-your">${correct ? '✓' : '✗'} Your answer: ${keys[userAns]}. ${q.opts[userAns]}</div>`
+        : `<div class="review-your">— Skipped</div>`}
+      ${!correct ? `<div class="review-correct">✓ Correct: ${keys[q.ans]}. ${q.opts[q.ans]}</div>` : ''}
+      <div class="review-expl">${q.expl}</div>
+    `;
+    rl.appendChild(div);
+  });
+
+  showScreen('screen-results');
+}
+
+function toggleReview() {
+  const rl = document.getElementById('review-list');
+  rl.classList.toggle('open');
+  document.querySelector('.review-toggle').textContent = rl.classList.contains('open') ? '🔼 Hide Answers' : '📋 Review Answers';
+}
+
+function restartSame() {
+  clearInterval(timerInterval);
+  startQuiz();
+}
+function goHome() {
+  clearInterval(timerInterval);
+  showScreen('screen-landing');
+}
+</script>
+</body>
+</html>
